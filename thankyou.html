@@ -19,13 +19,10 @@
       return name + '-' + Date.now() + '-' + Math.floor(Math.random()*1000000);
     }
 
-    // --- DYNAMIC VALUES FROM URL ---
+    // --- READ STRIPE DYNAMIC DATA FROM URL ---
     var urlParams = new URLSearchParams(window.location.search);
 
-    // Total paid (from Stripe/n8n)
     var finalAmount = parseFloat(urlParams.get('total')) || 0;
-
-    // Products purchased
     var contentIDs = [];
     if(urlParams.get('products')){
       contentIDs = urlParams.get('products').split(',');
@@ -33,23 +30,27 @@
 
     // --- FIRE EVENTS ---
 
-    // Dynamic ViewContent
-    fbq('track', 'ViewContent', {
-      content_ids: contentIDs,
-      content_type: 'product',
-      value: finalAmount,
-      currency: 'USD'
-    }, { eventID: getEventID('ViewContent') });
+    // Only fire Purchase if we have a total and products
+    if(finalAmount > 0 && contentIDs.length > 0){
+      fbq('track', 'Purchase', {
+        content_ids: contentIDs,
+        content_type: 'product',
+        value: finalAmount,
+        currency: 'USD'
+      }, { eventID: getEventID('Purchase') });
 
-    // Dynamic Purchase
-    fbq('track', 'Purchase', {
-      content_ids: contentIDs,
-      content_type: 'product',
-      value: finalAmount,
-      currency: 'USD'
-    }, { eventID: getEventID('Purchase') });
+      fbq('track', 'ViewContent', {
+        content_ids: contentIDs,
+        content_type: 'product',
+        value: finalAmount,
+        currency: 'USD'
+      }, { eventID: getEventID('ViewContent') });
+    }
 
+    // Optional: Fire ViewContent on homepage or product pages (without value) if desired
+    // fbq('track', 'ViewContent', {content_ids:['BASE27'], content_type:'product'});
   </script>
+
   <noscript>
     <img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=769019065883575&ev=Purchase&noscript=1"/>
@@ -220,6 +221,7 @@
 
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'982db58456dc1455',t:'MTc1ODUwMTE4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
 
 
