@@ -15,41 +15,13 @@
   // Initialize Pixel
   fbq('init', '769019065883575'); // Your Pixel ID
 
-  // Function to generate unique eventID
-  function getEventID(name){
-    return name + '-' + Date.now() + '-' + Math.floor(Math.random()*1000000);
-  }
-
-  // --- DYNAMIC VALUES FROM URL ---
-  var urlParams = new URLSearchParams(window.location.search);
-
-  // For ViewContent
-  var productID = urlParams.get('product') || 'BASE27'; // default product if none provided
-  var productValue = parseFloat(urlParams.get('price')) || 27.00; // default price if none provided
-
-  // Fire ViewContent event
-    fbq('track', 'ViewContent', {
-    content_ids: ['BASE27'],   // Your base product ID
+  // Fire ViewContent event for base product
+  fbq('track', 'ViewContent', {
+    content_ids: ['BASE27'],   // Base product ID
     content_type: 'product',
     value: 27.00,              // Base product price
     currency: 'USD'
   });
-
-  // For Purchase
-  var finalAmount = parseFloat(urlParams.get('total')) || 0; // Stripe total
-  var contentIDs = [];
-  if(urlParams.get('products')){
-    contentIDs = urlParams.get('products').split(',');
-  }
-
-  // Fire Purchase event with eventID for deduplication
-  fbq('track', 'Purchase', {
-    content_ids: contentIDs,
-    content_type: 'product',
-    value: finalAmount,
-    currency: 'USD'
-  }, { eventID: getEventID('Purchase') });
-
   </script>
 
   <noscript>
@@ -1760,6 +1732,7 @@
                         <p class
 
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'981320b60704f078',t:'MTc1ODIyMjQ2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+
 
 
 
